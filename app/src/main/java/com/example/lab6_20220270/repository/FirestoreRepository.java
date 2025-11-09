@@ -89,6 +89,29 @@ public class FirestoreRepository {
         });
     }
 
+    public void isVehicleIdUniqueGlobally(String vehicleId, String excludeDocumentId, OnCompleteListener<Boolean> listener) {
+        db.collectionGroup("vehicles")
+                .whereEqualTo("id", vehicleId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        boolean unique = true;
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            if (excludeDocumentId == null || !doc.getId().equals(excludeDocumentId)) {
+                                unique = false;
+                                break;
+                            }
+                        }
+                        Task<Boolean> resultTask = com.google.android.gms.tasks.Tasks.forResult(unique);
+                        listener.onComplete(resultTask);
+                    } else {
+                        Log.e(TAG, "Error checking vehicle ID uniqueness", task.getException());
+                        Task<Boolean> failedTask = com.google.android.gms.tasks.Tasks.forResult(false);
+                        listener.onComplete(failedTask);
+                    }
+                });
+    }
+
     public String generateUniqueRecordId() {
         Random random = new Random();
         int id = 10000 + random.nextInt(90000);

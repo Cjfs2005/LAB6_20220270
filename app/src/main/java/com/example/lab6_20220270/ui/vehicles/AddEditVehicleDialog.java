@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.lab6_20220270.R;
 import com.example.lab6_20220270.model.Vehicle;
+import com.example.lab6_20220270.repository.FirestoreRepository;
 import com.example.lab6_20220270.util.DateUtils;
 import com.example.lab6_20220270.viewmodel.VehiclesViewModel;
 import java.text.ParseException;
@@ -26,6 +27,7 @@ public class AddEditVehicleDialog extends DialogFragment {
     private Button btnSave;
     private Vehicle vehicleToEdit;
     private VehiclesViewModel viewModel;
+    private FirestoreRepository repository;
     private long selectedRevisionDate = 0;
 
     public static AddEditVehicleDialog newInstance(Vehicle vehicle) {
@@ -56,6 +58,7 @@ public class AddEditVehicleDialog extends DialogFragment {
         etLastRevision = view.findViewById(R.id.etVehicleLastRevision);
         btnSave = view.findViewById(R.id.btnSaveVehicle);
         viewModel = new ViewModelProvider(requireParentFragment()).get(VehiclesViewModel.class);
+        repository = new FirestoreRepository();
         if (getArguments() != null && getArguments().containsKey("documentId")) {
             vehicleToEdit = new Vehicle();
             vehicleToEdit.setDocumentId(getArguments().getString("documentId"));
@@ -110,18 +113,31 @@ public class AddEditVehicleDialog extends DialogFragment {
             return;
         }
         int year = Integer.parseInt(yearStr);
-        if (vehicleToEdit != null) {
-            vehicleToEdit.setId(id);
-            vehicleToEdit.setPlate(plate);
-            vehicleToEdit.setMarcaModelo(marcaModelo);
-            vehicleToEdit.setYear(year);
-            vehicleToEdit.setLastTechnicalRevision(selectedRevisionDate);
-            viewModel.updateVehicle(vehicleToEdit);
-        } else {
-            Vehicle newVehicle = new Vehicle(id, plate, marcaModelo, year, selectedRevisionDate);
-            viewModel.addVehicle(newVehicle);
-        }
-        Toast.makeText(getContext(), "Vehículo guardado", Toast.LENGTH_SHORT).show();
-        dismiss();
+        btnSave.setEnabled(false);
+        String excludeDocId = vehicleToEdit != null ? vehicleToEdit.getDocumentId() : null;
+        repository.isVehicleIdUniqueGlobally(id, excludeDocId, task -> {
+            btnSave.setEnabled(true);
+            if (task.isSuccessful() && task.getResult() != null) {
+                if (task.getResult()) {
+                    if (vehicleToEdit != null) {
+                        vehicleToEdit.setId(id);
+                        vehicleToEdit.setPlate(plate);
+                        vehicleToEdit.setMarcaModelo(marcaModelo);
+                        vehicleToEdit.setYear(year);
+                        vehicleToEdit.setLastTechnicalRevision(selectedRevisionDate);
+                        viewModel.updateVehicle(vehicleToEdit);
+                    } else {
+                        Vehicle newVehicle = new Vehicle(id, plate, marcaModelo, year, selectedRevisionDate);
+                        viewModel.addVehicle(newVehicle);
+                    }
+                    Toast.makeText(getContext(), "Vehículo guardado", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                } else {
+                    Toast.makeText(getContext(), "El ID del vehículo ya está en uso. Elija otro ID.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Error al validar el ID", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
