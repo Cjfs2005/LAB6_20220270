@@ -1,5 +1,6 @@
 package com.example.lab6_20220270.ui.vehicles;
 
+import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import com.example.lab6_20220270.repository.FirestoreRepository;
 import com.example.lab6_20220270.util.DateUtils;
 import com.example.lab6_20220270.util.QRGenerator;
 import com.google.firebase.firestore.DocumentSnapshot;
+import java.util.Calendar;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +47,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         vehicleLastRevision = getIntent().getLongExtra("vehicleLastRevision", 0);
         displayVehicleInfo();
         generateQR();
-        btnUpdateRevision.setOnClickListener(v -> updateLastRevision());
+        btnUpdateRevision.setOnClickListener(v -> showRevisionDatePicker());
     }
 
     private void displayVehicleInfo() {
@@ -86,8 +88,33 @@ public class VehicleDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void updateLastRevision() {
-        long newRevisionDate = System.currentTimeMillis();
+    private void showRevisionDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth, selectedDay) -> {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.set(selectedYear, selectedMonth, selectedDay, 0, 0, 0);
+            selectedDate.set(Calendar.MILLISECOND, 0);
+            long selectedTimestamp = selectedDate.getTimeInMillis();
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+            long todayTimestamp = today.getTimeInMillis();
+            if (selectedTimestamp <= todayTimestamp) {
+                Toast.makeText(this, "La fecha de revisión técnica debe ser posterior a hoy", Toast.LENGTH_LONG).show();
+            } else {
+                updateLastRevision(selectedTimestamp);
+            }
+        }, year, month, day);
+        datePickerDialog.setTitle("Fecha de última revisión técnica");
+        datePickerDialog.show();
+    }
+
+    private void updateLastRevision(long newRevisionDate) {
         Vehicle updatedVehicle = new Vehicle(vehicleId, vehiclePlate, vehicleMarcaModelo, vehicleYear, newRevisionDate);
         updatedVehicle.setDocumentId(vehicleDocId);
         repository.updateVehicle(vehicleDocId, updatedVehicle, task -> {
