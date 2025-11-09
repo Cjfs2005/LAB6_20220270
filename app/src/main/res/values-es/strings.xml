@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lab6_20220270</string>
+
+    <string name="fui_progress_dialog_loading">Cargando…</string>
+    <string name="fui_progress_dialog_signing_in">Iniciando sesión…</string>
+    <string name="fui_progress_dialog_signing_up">Registrándose…</string>
+    <string name="fui_progress_dialog_checking_accounts">Verificando cuentas existentes…</string>
+    
+    <string name="fui_sign_in_default">Iniciar sesión</string>
+    <string name="fui_sign_in_with_google">Iniciar sesión con Google</string>
+    <string name="fui_sign_in_with_email">Iniciar sesión con correo</string>
+    
+    <string name="fui_next_default">Siguiente</string>
+    <string name="fui_email_hint">Correo electrónico</string>
+    <string name="fui_password_hint">Contraseña</string>
+    <string name="fui_required_field">No puedes dejar esto vacío.</string>
+    <string name="fui_invalid_email_address">Esa dirección de correo no es correcta</string>
+    <string name="fui_missing_email_address">Ingresa tu dirección de correo electrónico para continuar</string>
+    <string name="fui_progress_dialog_checking_email">Verificando correo electrónico…</string>
+    
+    <string name="fui_title_register_email">Registrarse</string>
+    <string name="fui_name_hint">Nombre y apellido</string>
+    <string name="fui_button_text_save">Guardar</string>
+    <string name="fui_email_account_creation_error">Error al registrar cuenta de correo</string>
+    
+    <string name="fui_title_confirm_recover_password">Verificar correo enviado</string>
+    <string name="fui_confirm_recovery_body">Sigue las instrucciones enviadas a %1$s para recuperar tu contraseña.</string>
+    <string name="fui_button_text_send">Enviar</string>
+    
+    <string name="fui_trouble_signing_in">¿Problemas para iniciar sesión?</string>
+    <string name="fui_forgot_password">¿Olvidaste tu contraseña?</string>
+    
+    <string name="fui_password_recovery_body">Recibe instrucciones enviadas a este correo que explican cómo restablecer tu contraseña.</string>
+    <string name="fui_password_recovery_email_sent">Correo de recuperación enviado</string>
+    
+    <string name="fui_error_invalid_password">Esa contraseña no es correcta</string>
+    <string name="fui_error_user_collision">Esa cuenta ya existe.</string>
+    <string name="fui_error_weak_password">La contraseña no es lo suficientemente segura. Usa al menos 6 caracteres con una combinación de letras y números</string>
+    <string name="fui_error_unknown">Ocurrió un error desconocido.</string>
+    <string name="fui_error_email_does_not_exist">Esa dirección de correo no coincide con una cuenta existente</string>
+    
+    <string name="fui_idp_name_email">Correo</string>
+    <string name="fui_idp_name_google">Google</string>
+    
+    <string name="fui_general_error">Ocurrió un error.</string>
+    
+    <string name="fui_welcome_back_idp_header">Ya tienes una cuenta</string>
+    <string name="fui_welcome_back_email_header">¡Bienvenido nuevamente!</string>
+    <string name="fui_welcome_back_idp_prompt">Ya has usado %1$s. Inicia sesión con %2$s para continuar.</string>
+    <string name="fui_welcome_back_email_link_header">Ya iniciaste sesión antes</string>
+    <string name="fui_welcome_back_email_link_prompt_body">Ya iniciaste sesión con %1$s. Ingresa tu contraseña para %2$s.</string>
+    
+    <string name="fui_sign_in_anonymously">Continuar como invitado</string>
+    
+    <string name="fui_tos_and_pp">Al continuar, indicas que aceptas nuestros %1$s y %2$s.</string>
+    <string name="fui_tos_and_pp_footer">Al tocar \"%1$s\", indicas que aceptas nuestros %2$s y %3$s.</string>
+    
+    <string name="fui_title_reset_password">Restablecer contraseña</string>
+    <string name="fui_password_too_short">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="fui_passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="fui_password_hint_new">Nueva contraseña</string>
+    <string name="fui_password_hint_confirm">Confirmar contraseña</string>
+    
+    <string name="fui_save">Guardar</string>
+    <string name="fui_cancel">Cancelar</string>
+</resources>

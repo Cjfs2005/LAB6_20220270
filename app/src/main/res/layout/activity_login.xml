@@ -21,60 +21,36 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inicio de sesión"
+            android:text="Monitoreo de Combustible"
             android:textSize="22sp"
             android:layout_marginTop="16dp"
             android:textStyle="bold"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="Correo electrónico">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Contraseña"
-            app:endIconMode="password_toggle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:text="Selecciona un método de autenticación"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/darker_gray"/>
 
         <Button
-            android:id="@+id/buttonLogin"
+            android:id="@+id/btnEmailPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Correo y contraseña"
+            android:textSize="16sp"
+            android:paddingVertical="16dp"/>
+
+        <Button
+            android:id="@+id/btnGoogle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Iniciar sesión"/>
-
-        <Button
-            android:id="@+id/buttonRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Registrar"/>
-
-        <Button
-            android:id="@+id/buttonGoogle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Iniciar con Google"/>
+            android:text="Continuar con Google"
+            android:textSize="16sp"
+            android:paddingVertical="16dp"/>
 
     </LinearLayout>
 
