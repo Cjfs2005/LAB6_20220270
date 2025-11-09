@@ -137,20 +137,25 @@ public class FirestoreRepository {
         });
     }
 
+    /*
+    Modelo: Claude Sonnet 4.5 (Integrado en Github Copilot en modo ask para que reciba contexto)
+    Prompt: Eres un programador de aplicaciones en Android. Necesito que simplifiques las queries de Firestore
+    para evitar crear índices compuestos. En lugar de usar orderBy en Firestore, trae todos los documentos
+    con whereEqualTo y ordena en memoria.
+    Correcciones: En base al código entregado, tuve que agregar el import de java.util.Calendar en algunos
+    archivos donde se usaban comparaciones de fechas.
+    */
     public void getLastOdometerForVehicle(String vehicleId, OnCompleteListener<Long> listener) {
         CollectionReference ref = getRecordsCollection();
         if (ref == null) {
-            Log.e(TAG, "getLastOdometerForVehicle: ref is null");
             Task<Long> failedTask = com.google.android.gms.tasks.Tasks.forResult(0L);
             listener.onComplete(failedTask);
             return;
         }
-        Log.d(TAG, "getLastOdometerForVehicle: Buscando vehicleId=" + vehicleId);
         ref.whereEqualTo("vehicleId", vehicleId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "getLastOdometerForVehicle: Query exitosa, documentos encontrados: " + task.getResult().size());
                         if (!task.getResult().isEmpty()) {
                             FuelRecord latestRecord = null;
                             long latestDate = 0;
@@ -163,21 +168,14 @@ public class FirestoreRepository {
                             }
                             if (latestRecord != null) {
                                 long odometer = latestRecord.getOdometer();
-                                Log.d(TAG, "getLastOdometerForVehicle: Kilometraje encontrado: " + odometer + ", fecha: " + latestRecord.getDate());
                                 Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(odometer);
                                 listener.onComplete(resultTask);
-                            } else {
-                                Log.w(TAG, "getLastOdometerForVehicle: No se encontraron registros válidos");
-                                Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
-                                listener.onComplete(resultTask);
+                                return;
                             }
-                        } else {
-                            Log.w(TAG, "getLastOdometerForVehicle: No se encontraron registros para vehicleId=" + vehicleId);
-                            Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
-                            listener.onComplete(resultTask);
                         }
+                        Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
+                        listener.onComplete(resultTask);
                     } else {
-                        Log.e(TAG, "getLastOdometerForVehicle: Error en query", task.getException());
                         Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
                         listener.onComplete(resultTask);
                     }

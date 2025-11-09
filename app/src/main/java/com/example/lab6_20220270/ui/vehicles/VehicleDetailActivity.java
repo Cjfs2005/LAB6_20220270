@@ -60,11 +60,9 @@ public class VehicleDetailActivity extends AppCompatActivity {
     }
 
     private void generateQR() {
-        android.util.Log.d("VehicleDetailActivity", "Buscando registros para vehicleId: " + vehicleId);
         repository.getLastOdometerForVehicle(vehicleId, task -> {
             if (task.isSuccessful()) {
                 long lastOdometer = task.getResult() != null ? task.getResult() : 0;
-                android.util.Log.d("VehicleDetailActivity", "Kilometraje obtenido: " + lastOdometer);
                 JSONObject qrData = new JSONObject();
                 try {
                     qrData.put("placa", vehiclePlate);
@@ -82,12 +80,20 @@ public class VehicleDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error generando QR", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                android.util.Log.e("VehicleDetailActivity", "Error al obtener kilometraje", task.getException());
                 Toast.makeText(this, "Error al obtener kilometraje", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /*
+    Modelo: Claude Sonnet 4.5 (Integrado en Github Copilot en modo ask para que reciba contexto)
+    Prompt: Eres un experto desarrollador Android. Para actualizar la revisión técnica del vehículo, necesito
+    que al presionar el botón aparezca un DatePickerDialog que solicite la fecha y valide que sea mayor a la
+    fecha actual. Si no es válida, debe mostrar un Toast de error.
+    Correcciones: En base al código entregado, tuve que corregir el título del DatePickerDialog de "Fecha de
+    próxima revisión técnica" a "Fecha de última revisión técnica" para que coincida con la lógica del negocio,
+    y también tuve que importar java.util.Calendar que faltaba en los imports iniciales.
+    */
     private void showRevisionDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);

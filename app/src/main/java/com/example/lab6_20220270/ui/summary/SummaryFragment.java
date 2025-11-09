@@ -52,6 +52,15 @@ public class SummaryFragment extends Fragment {
         return view;
     }
 
+    /*
+    Modelo: Claude Sonnet 4.5 (Integrado en Github Copilot en modo ask para que reciba contexto)
+    Prompt: Eres un desarrollador Android experto. Necesito implementar un fragmento de resumen que muestre
+    dos gráficos usando MPAndroidChart: un gráfico de barras que agregue los litros consumidos por mes, y
+    un gráfico circular (pie chart) que muestre la proporción de cada tipo de combustible usado.
+    Correcciones: En base al código entregado, tuve que ajustar el formato de las etiquetas del eje X del
+    gráfico de barras para que muestre MM/yyyy en lugar de yyyy-MM, y también tuve que configurar las
+    propiedades de estilo de los gráficos para que se vean mejor en pantallas pequeñas.
+    */
     private void setupBarChart(List<FuelRecord> records) {
         Map<String, Float> monthlyLiters = new HashMap<>();
         for (FuelRecord record : records) {

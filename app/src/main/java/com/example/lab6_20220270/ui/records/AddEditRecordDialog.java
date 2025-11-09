@@ -169,6 +169,15 @@ public class AddEditRecordDialog extends DialogFragment {
         timePickerDialog.show();
     }
 
+    /*
+    Modelo: Claude Sonnet 4.5 (Integrado en Github Copilot en modo ask para que reciba contexto)
+    Prompt: Eres un programador experto en Android. Necesito mejorar la validación de kilometraje para que
+    verifique tanto el registro anterior como el posterior según la fecha, no solo el máximo global. Debe
+    validar que el kilometraje esté entre el registro inmediatamente anterior y posterior cronológicamente.
+    Correcciones: En base al código entregado, tuve que ajustar los mensajes Toast para que mostraran la
+    fecha completa con hora usando formatDateTime en lugar de solo formatDate, y también tuve que manejar
+    mejor los callbacks anidados para evitar problemas de sincronización.
+    */
     private void saveRecord() {
         if (vehiclesList.isEmpty()) {
             Toast.makeText(getContext(), "Debe crear un vehículo primero", Toast.LENGTH_SHORT).show();
