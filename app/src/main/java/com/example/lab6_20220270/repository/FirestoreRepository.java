@@ -47,7 +47,6 @@ public class FirestoreRepository {
         CollectionReference ref = getVehiclesCollection();
         if (ref == null) return;
         vehicle.setCreatedAt(System.currentTimeMillis());
-        vehicle.setUpdatedAt(System.currentTimeMillis());
         ref.add(vehicle).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "Vehicle added");
@@ -61,7 +60,6 @@ public class FirestoreRepository {
     public void updateVehicle(String documentId, Vehicle vehicle, OnCompleteListener<Void> listener) {
         CollectionReference ref = getVehiclesCollection();
         if (ref == null) return;
-        vehicle.setUpdatedAt(System.currentTimeMillis());
         ref.document(documentId).set(vehicle).addOnCompleteListener(listener);
     }
 

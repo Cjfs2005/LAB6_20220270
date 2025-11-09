@@ -1,6 +1,9 @@
 package com.example.lab6_20220270.model;
 
+import com.google.firebase.firestore.Exclude;
+
 public class Vehicle {
+    @Exclude
     private String documentId;
     private String id;
     private String plate;
@@ -8,7 +11,6 @@ public class Vehicle {
     private int year;
     private long lastTechnicalRevision;
     private long createdAt;
-    private long updatedAt;
 
     public Vehicle() {
     }
@@ -20,13 +22,13 @@ public class Vehicle {
         this.year = year;
         this.lastTechnicalRevision = lastTechnicalRevision;
         this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
     }
 
     public String getDocumentId() {
         return documentId;
     }
 
+    @Exclude
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
@@ -77,13 +79,5 @@ public class Vehicle {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public long getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(long updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
