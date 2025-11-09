@@ -58,23 +58,30 @@ public class VehicleDetailActivity extends AppCompatActivity {
     }
 
     private void generateQR() {
+        android.util.Log.d("VehicleDetailActivity", "Buscando registros para vehicleId: " + vehicleId);
         repository.getLastOdometerForVehicle(vehicleId, task -> {
-            long lastOdometer = task.isSuccessful() && task.getResult() != null ? task.getResult() : 0;
-            JSONObject qrData = new JSONObject();
-            try {
-                qrData.put("placa", vehiclePlate);
-                qrData.put("kilometraje", lastOdometer);
-                qrData.put("ultima_revision", DateUtils.formatDate(vehicleLastRevision));
-                String qrContent = qrData.toString();
-                Bitmap qrBitmap = QRGenerator.generateQR(qrContent, 512, 512);
-                if (qrBitmap != null) {
-                    ivQR.setImageBitmap(qrBitmap);
-                } else {
+            if (task.isSuccessful()) {
+                long lastOdometer = task.getResult() != null ? task.getResult() : 0;
+                android.util.Log.d("VehicleDetailActivity", "Kilometraje obtenido: " + lastOdometer);
+                JSONObject qrData = new JSONObject();
+                try {
+                    qrData.put("placa", vehiclePlate);
+                    qrData.put("kilometraje", lastOdometer);
+                    qrData.put("ultima_revision", DateUtils.formatDate(vehicleLastRevision));
+                    String qrContent = qrData.toString();
+                    Bitmap qrBitmap = QRGenerator.generateQR(qrContent, 512, 512);
+                    if (qrBitmap != null) {
+                        ivQR.setImageBitmap(qrBitmap);
+                    } else {
+                        Toast.makeText(this, "Error generando QR", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                     Toast.makeText(this, "Error generando QR", Toast.LENGTH_SHORT).show();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Error generando QR", Toast.LENGTH_SHORT).show();
+            } else {
+                android.util.Log.e("VehicleDetailActivity", "Error al obtener kilometraje", task.getException());
+                Toast.makeText(this, "Error al obtener kilometraje", Toast.LENGTH_SHORT).show();
             }
         });
     }

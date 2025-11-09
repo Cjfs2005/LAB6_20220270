@@ -117,22 +117,44 @@ public class FirestoreRepository {
     public void getLastOdometerForVehicle(String vehicleId, OnCompleteListener<Long> listener) {
         CollectionReference ref = getRecordsCollection();
         if (ref == null) {
+            Log.e(TAG, "getLastOdometerForVehicle: ref is null");
             Task<Long> failedTask = com.google.android.gms.tasks.Tasks.forResult(0L);
             listener.onComplete(failedTask);
             return;
         }
+        Log.d(TAG, "getLastOdometerForVehicle: Buscando vehicleId=" + vehicleId);
         ref.whereEqualTo("vehicleId", vehicleId)
-                .orderBy("date", Query.Direction.DESCENDING)
-                .limit(1)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
-                        FuelRecord record = doc.toObject(FuelRecord.class);
-                        long odometer = record != null ? record.getOdometer() : 0L;
-                        Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(odometer);
-                        listener.onComplete(resultTask);
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "getLastOdometerForVehicle: Query exitosa, documentos encontrados: " + task.getResult().size());
+                        if (!task.getResult().isEmpty()) {
+                            FuelRecord latestRecord = null;
+                            long latestDate = 0;
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                FuelRecord record = doc.toObject(FuelRecord.class);
+                                if (record != null && record.getDate() > latestDate) {
+                                    latestDate = record.getDate();
+                                    latestRecord = record;
+                                }
+                            }
+                            if (latestRecord != null) {
+                                long odometer = latestRecord.getOdometer();
+                                Log.d(TAG, "getLastOdometerForVehicle: Kilometraje encontrado: " + odometer + ", fecha: " + latestRecord.getDate());
+                                Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(odometer);
+                                listener.onComplete(resultTask);
+                            } else {
+                                Log.w(TAG, "getLastOdometerForVehicle: No se encontraron registros válidos");
+                                Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
+                                listener.onComplete(resultTask);
+                            }
+                        } else {
+                            Log.w(TAG, "getLastOdometerForVehicle: No se encontraron registros para vehicleId=" + vehicleId);
+                            Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
+                            listener.onComplete(resultTask);
+                        }
                     } else {
+                        Log.e(TAG, "getLastOdometerForVehicle: Error en query", task.getException());
                         Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
                         listener.onComplete(resultTask);
                     }
@@ -146,22 +168,23 @@ public class FirestoreRepository {
             return;
         }
         ref.whereEqualTo("vehicleId", vehicleId)
-                .whereLessThan("date", date)
-                .orderBy("date", Query.Direction.DESCENDING)
-                .limit(1)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
-                        if (excludeDocId != null && doc.getId().equals(excludeDocId)) {
-                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
-                        } else {
-                            FuelRecord record = doc.toObject(FuelRecord.class);
-                            if (record != null) {
-                                record.setDocumentId(doc.getId());
+                    if (task.isSuccessful()) {
+                        FuelRecord previousRecord = null;
+                        long closestDate = 0;
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            if (excludeDocId != null && doc.getId().equals(excludeDocId)) {
+                                continue;
                             }
-                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(record));
+                            FuelRecord record = doc.toObject(FuelRecord.class);
+                            if (record != null && record.getDate() < date && record.getDate() > closestDate) {
+                                closestDate = record.getDate();
+                                previousRecord = record;
+                                previousRecord.setDocumentId(doc.getId());
+                            }
                         }
+                        listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(previousRecord));
                     } else {
                         listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
                     }
@@ -175,22 +198,23 @@ public class FirestoreRepository {
             return;
         }
         ref.whereEqualTo("vehicleId", vehicleId)
-                .whereGreaterThan("date", date)
-                .orderBy("date", Query.Direction.ASCENDING)
-                .limit(1)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
-                        if (excludeDocId != null && doc.getId().equals(excludeDocId)) {
-                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
-                        } else {
-                            FuelRecord record = doc.toObject(FuelRecord.class);
-                            if (record != null) {
-                                record.setDocumentId(doc.getId());
+                    if (task.isSuccessful()) {
+                        FuelRecord nextRecord = null;
+                        long closestDate = Long.MAX_VALUE;
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            if (excludeDocId != null && doc.getId().equals(excludeDocId)) {
+                                continue;
                             }
-                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(record));
+                            FuelRecord record = doc.toObject(FuelRecord.class);
+                            if (record != null && record.getDate() > date && record.getDate() < closestDate) {
+                                closestDate = record.getDate();
+                                nextRecord = record;
+                                nextRecord.setDocumentId(doc.getId());
+                            }
                         }
+                        listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(nextRecord));
                     } else {
                         listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
                     }
@@ -226,7 +250,7 @@ public class FirestoreRepository {
     public void getRecords(MutableLiveData<List<FuelRecord>> liveData) {
         CollectionReference ref = getRecordsCollection();
         if (ref == null) return;
-        ref.orderBy("date", Query.Direction.DESCENDING).get().addOnCompleteListener(task -> {
+        ref.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<FuelRecord> records = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
@@ -236,6 +260,7 @@ public class FirestoreRepository {
                         records.add(r);
                     }
                 }
+                records.sort((r1, r2) -> Long.compare(r2.getDate(), r1.getDate()));
                 liveData.setValue(records);
             } else {
                 Log.e(TAG, "Error getting records", task.getException());
@@ -246,15 +271,9 @@ public class FirestoreRepository {
     public void getRecordsFiltered(String vehicleId, Long startDate, Long endDate, MutableLiveData<List<FuelRecord>> liveData) {
         CollectionReference ref = getRecordsCollection();
         if (ref == null) return;
-        Query query = ref.orderBy("date", Query.Direction.DESCENDING);
+        Query query = ref;
         if (vehicleId != null && !vehicleId.isEmpty()) {
             query = query.whereEqualTo("vehicleId", vehicleId);
-        }
-        if (startDate != null) {
-            query = query.whereGreaterThanOrEqualTo("date", startDate);
-        }
-        if (endDate != null) {
-            query = query.whereLessThanOrEqualTo("date", endDate);
         }
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -262,10 +281,20 @@ public class FirestoreRepository {
                 for (DocumentSnapshot doc : task.getResult()) {
                     FuelRecord r = doc.toObject(FuelRecord.class);
                     if (r != null) {
-                        r.setDocumentId(doc.getId());
-                        records.add(r);
+                        boolean includeRecord = true;
+                        if (startDate != null && r.getDate() < startDate) {
+                            includeRecord = false;
+                        }
+                        if (endDate != null && r.getDate() > endDate) {
+                            includeRecord = false;
+                        }
+                        if (includeRecord) {
+                            r.setDocumentId(doc.getId());
+                            records.add(r);
+                        }
                     }
                 }
+                records.sort((r1, r2) -> Long.compare(r2.getDate(), r1.getDate()));
                 liveData.setValue(records);
             } else {
                 Log.e(TAG, "Error getting filtered records", task.getException());
