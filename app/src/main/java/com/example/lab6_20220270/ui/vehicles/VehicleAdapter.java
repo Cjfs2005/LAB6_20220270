@@ -40,10 +40,10 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vehicle vehicle = vehicles.get(position);
-        holder.tvId.setText(vehicle.getId());
-        holder.tvPlate.setText(vehicle.getPlate());
-        holder.tvMarcaModelo.setText(vehicle.getMarcaModelo());
-        holder.tvYear.setText(String.valueOf(vehicle.getYear()));
+        holder.tvId.setText("ID: " + vehicle.getId());
+        holder.tvPlate.setText("Placa: " + vehicle.getPlate());
+        holder.tvMarcaModelo.setText("Marca/Modelo: " + vehicle.getMarcaModelo());
+        holder.tvYear.setText("Año: " + vehicle.getYear());
         holder.itemView.setOnClickListener(v -> listener.onVehicleClick(vehicle));
         holder.btnEdit.setOnClickListener(v -> listener.onVehicleEdit(vehicle));
         holder.btnDelete.setOnClickListener(v -> listener.onVehicleDelete(vehicle));

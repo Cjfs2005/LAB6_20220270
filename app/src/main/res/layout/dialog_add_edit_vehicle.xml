@@ -5,42 +5,76 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/etVehicleId"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ID del vehículo (nickname)"
-        android:inputType="text" />
+        android:hint="ID del vehículo (nickname)">
 
-    <EditText
-        android:id="@+id/etVehiclePlate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Placa"
-        android:inputType="text" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etVehicleId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/etVehicleMarcaModelo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Marca / Modelo"
-        android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etVehicleYear"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Año"
-        android:inputType="number" />
+        android:layout_marginTop="8dp"
+        android:hint="Placa">
 
-    <EditText
-        android:id="@+id/etVehicleLastRevision"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etVehiclePlate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Fecha de última revisión técnica"
-        android:focusable="false"
-        android:clickable="true"
-        android:inputType="none" />
+        android:layout_marginTop="8dp"
+        android:hint="Marca / Modelo">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etVehicleMarcaModelo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Año">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etVehicleYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Fecha de última revisión técnica">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etVehicleLastRevision"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnSaveVehicle"
