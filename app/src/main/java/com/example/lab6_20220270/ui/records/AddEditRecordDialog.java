@@ -187,14 +187,17 @@ public class AddEditRecordDialog extends DialogFragment {
         double liters = Double.parseDouble(litersStr);
         long odometer = Long.parseLong(odometerStr);
         double price = Double.parseDouble(priceStr);
-        repository.getLastOdometerForVehicle(vehicleId, task -> {
-            if (task.isSuccessful()) {
-                long lastOdometer = task.getResult();
-                if (recordToEdit != null && recordToEdit.getOdometer() == lastOdometer) {
-                    lastOdometer = 0;
+        String excludeDocId = recordToEdit != null ? recordToEdit.getDocumentId() : null;
+        repository.getPreviousRecordByDate(vehicleId, selectedDate, excludeDocId, prevTask -> {
+            FuelRecord previousRecord = prevTask.isSuccessful() ? prevTask.getResult() : null;
+            repository.getNextRecordByDate(vehicleId, selectedDate, excludeDocId, nextTask -> {
+                FuelRecord nextRecord = nextTask.isSuccessful() ? nextTask.getResult() : null;
+                if (previousRecord != null && odometer <= previousRecord.getOdometer()) {
+                    Toast.makeText(getContext(), "El kilometraje debe ser mayor al registro anterior (" + previousRecord.getOdometer() + " km el " + DateUtils.formatDateTime(previousRecord.getDate()) + ")", Toast.LENGTH_LONG).show();
+                    return;
                 }
-                if (odometer <= lastOdometer) {
-                    Toast.makeText(getContext(), "El kilometraje debe ser mayor al último registrado (" + lastOdometer + ")", Toast.LENGTH_LONG).show();
+                if (nextRecord != null && odometer >= nextRecord.getOdometer()) {
+                    Toast.makeText(getContext(), "El kilometraje debe ser menor al registro posterior (" + nextRecord.getOdometer() + " km el " + DateUtils.formatDateTime(nextRecord.getDate()) + ")", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (recordToEdit != null) {
@@ -210,7 +213,7 @@ public class AddEditRecordDialog extends DialogFragment {
                 } else {
                     generateAndSaveNewRecord(vehicleId, liters, odometer, price, fuelType);
                 }
-            }
+            });
         });
     }
 

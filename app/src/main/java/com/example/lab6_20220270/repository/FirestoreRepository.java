@@ -122,7 +122,7 @@ public class FirestoreRepository {
             return;
         }
         ref.whereEqualTo("vehicleId", vehicleId)
-                .orderBy("odometer", Query.Direction.DESCENDING)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .limit(1)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -135,6 +135,64 @@ public class FirestoreRepository {
                     } else {
                         Task<Long> resultTask = com.google.android.gms.tasks.Tasks.forResult(0L);
                         listener.onComplete(resultTask);
+                    }
+                });
+    }
+
+    public void getPreviousRecordByDate(String vehicleId, long date, String excludeDocId, OnCompleteListener<FuelRecord> listener) {
+        CollectionReference ref = getRecordsCollection();
+        if (ref == null) {
+            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
+            return;
+        }
+        ref.whereEqualTo("vehicleId", vehicleId)
+                .whereLessThan("date", date)
+                .orderBy("date", Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                        if (excludeDocId != null && doc.getId().equals(excludeDocId)) {
+                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
+                        } else {
+                            FuelRecord record = doc.toObject(FuelRecord.class);
+                            if (record != null) {
+                                record.setDocumentId(doc.getId());
+                            }
+                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(record));
+                        }
+                    } else {
+                        listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
+                    }
+                });
+    }
+
+    public void getNextRecordByDate(String vehicleId, long date, String excludeDocId, OnCompleteListener<FuelRecord> listener) {
+        CollectionReference ref = getRecordsCollection();
+        if (ref == null) {
+            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
+            return;
+        }
+        ref.whereEqualTo("vehicleId", vehicleId)
+                .whereGreaterThan("date", date)
+                .orderBy("date", Query.Direction.ASCENDING)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                        if (excludeDocId != null && doc.getId().equals(excludeDocId)) {
+                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
+                        } else {
+                            FuelRecord record = doc.toObject(FuelRecord.class);
+                            if (record != null) {
+                                record.setDocumentId(doc.getId());
+                            }
+                            listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(record));
+                        }
+                    } else {
+                        listener.onComplete(com.google.android.gms.tasks.Tasks.forResult(null));
                     }
                 });
     }
