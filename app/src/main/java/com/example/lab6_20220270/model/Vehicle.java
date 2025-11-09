@@ -24,6 +24,7 @@ public class Vehicle {
         this.createdAt = System.currentTimeMillis();
     }
 
+    @Exclude
     public String getDocumentId() {
         return documentId;
     }

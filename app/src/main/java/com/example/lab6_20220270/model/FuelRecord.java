@@ -1,6 +1,9 @@
 package com.example.lab6_20220270.model;
 
+import com.google.firebase.firestore.Exclude;
+
 public class FuelRecord {
+    @Exclude
     private String documentId;
     private String recordId;
     private String vehicleId;
@@ -25,10 +28,12 @@ public class FuelRecord {
         this.createdAt = System.currentTimeMillis();
     }
 
+    @Exclude
     public String getDocumentId() {
         return documentId;
     }
 
+    @Exclude
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
