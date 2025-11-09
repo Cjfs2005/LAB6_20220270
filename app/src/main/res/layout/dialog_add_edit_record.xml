@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vehículo"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spinnerVehicle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etRecordDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fecha"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none" />
+
+        <EditText
+            android:id="@+id/etRecordLiters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Litros cargados"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/etRecordOdometer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Kilometraje actual"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etRecordPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precio total (S/)"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de combustible"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerFuelType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnSaveRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Guardar" />
+
+    </LinearLayout>
+
+</ScrollView>

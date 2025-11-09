@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRecordId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvRecordVehicleId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vehículo"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRecordDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRecordLiters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Litros"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRecordOdometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kilometraje"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRecordPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvRecordFuelType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Combustible"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnEditRecord"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Editar"
+                android:src="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:id="@+id/btnDeleteRecord"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Eliminar"
+                android:src="@android:drawable/ic_menu_delete" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
