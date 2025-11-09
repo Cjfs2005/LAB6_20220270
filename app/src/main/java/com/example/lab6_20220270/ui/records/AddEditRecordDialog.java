@@ -2,6 +2,7 @@ package com.example.lab6_20220270.ui.records;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +86,7 @@ public class AddEditRecordDialog extends DialogFragment {
             recordToEdit.setFuelType(getArguments().getString("fuelType"));
             selectedRecordId = recordToEdit.getRecordId();
             selectedDate = recordToEdit.getDate();
-            etDate.setText(DateUtils.formatDate(recordToEdit.getDate()));
+            etDate.setText(DateUtils.formatDateTime(recordToEdit.getDate()));
             etLiters.setText(String.valueOf(recordToEdit.getLiters()));
             etOdometer.setText(String.valueOf(recordToEdit.getOdometer()));
             etPrice.setText(String.valueOf(recordToEdit.getTotalPrice()));
@@ -104,9 +105,9 @@ public class AddEditRecordDialog extends DialogFragment {
             }
         } else {
             selectedDate = System.currentTimeMillis();
-            etDate.setText(DateUtils.formatDate(selectedDate));
+            etDate.setText(DateUtils.formatDateTime(selectedDate));
         }
-        etDate.setOnClickListener(v -> showDatePicker());
+        etDate.setOnClickListener(v -> showDateTimePicker());
         btnSave.setOnClickListener(v -> saveRecord());
         builder.setView(view)
                 .setTitle(recordToEdit != null ? "Editar Registro" : "Agregar Registro")
@@ -131,7 +132,7 @@ public class AddEditRecordDialog extends DialogFragment {
         spinnerFuelType.setAdapter(adapter);
     }
 
-    private void showDatePicker() {
+    private void showDateTimePicker() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(selectedDate);
         DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -139,14 +140,33 @@ public class AddEditRecordDialog extends DialogFragment {
                 (view, year, month, dayOfMonth) -> {
                     Calendar selected = Calendar.getInstance();
                     selected.set(year, month, dayOfMonth);
-                    selectedDate = selected.getTimeInMillis();
-                    etDate.setText(DateUtils.formatDate(selectedDate));
+                    showTimePicker(selected);
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
         datePickerDialog.show();
+    }
+
+    private void showTimePicker(Calendar dateCalendar) {
+        Calendar currentTime = Calendar.getInstance();
+        currentTime.setTimeInMillis(selectedDate);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, minute) -> {
+                    dateCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    dateCalendar.set(Calendar.MINUTE, minute);
+                    dateCalendar.set(Calendar.SECOND, 0);
+                    dateCalendar.set(Calendar.MILLISECOND, 0);
+                    selectedDate = dateCalendar.getTimeInMillis();
+                    etDate.setText(DateUtils.formatDateTime(selectedDate));
+                },
+                currentTime.get(Calendar.HOUR_OF_DAY),
+                currentTime.get(Calendar.MINUTE),
+                true
+        );
+        timePickerDialog.show();
     }
 
     private void saveRecord() {

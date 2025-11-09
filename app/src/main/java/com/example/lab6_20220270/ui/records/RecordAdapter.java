@@ -42,7 +42,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.ViewHolder
         FuelRecord record = records.get(position);
         holder.tvRecordId.setText("ID: " + record.getRecordId());
         holder.tvVehicleId.setText("Vehículo: " + record.getVehicleId());
-        holder.tvDate.setText("Fecha: " + DateUtils.formatDate(record.getDate()));
+        holder.tvDate.setText("Fecha y hora: " + DateUtils.formatDateTime(record.getDate()));
         holder.tvLiters.setText("Litros: " + record.getLiters());
         holder.tvOdometer.setText("Kilometraje: " + record.getOdometer());
         holder.tvPrice.setText("Precio: S/ " + record.getTotalPrice());
