@@ -90,8 +90,15 @@ public class FirestoreRepository {
     }
 
     public void isVehicleIdUniqueGlobally(String vehicleId, String excludeDocumentId, OnCompleteListener<Boolean> listener) {
-        db.collectionGroup("vehicles")
-                .whereEqualTo("id", vehicleId)
+        CollectionReference vehiclesRef = getVehiclesCollection();
+        if (vehiclesRef == null) {
+            Log.e(TAG, "Usuario no autenticado");
+            Task<Boolean> failedTask = com.google.android.gms.tasks.Tasks.forResult(false);
+            listener.onComplete(failedTask);
+            return;
+        }
+
+        vehiclesRef.whereEqualTo("id", vehicleId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
